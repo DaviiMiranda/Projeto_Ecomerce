@@ -1,0 +1,7 @@
+- carrinho funcional, calcula o preço total e faz a lista dos produtos
+- produtos vindo direto do banco de dados  FEITO
+- token de acesso no cadastro dos clientes 
+- login funcional
+- informações do cliente cadastrado em uma pagina especifica
+- pagina funcional para visualizar produtos
+- pagina especifica para gerir conta do cliente

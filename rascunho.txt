@@ -1,0 +1,93 @@
+
+
+
+
+function getUserId() {
+    // Isso é um placeholder! Use o ID do usuário autenticado no Firebase Authentication.
+    // Por exemplo: return firebase.auth().currentUser ? firebase.auth().currentUser.uid : "usuario_anonimo";
+    return "usuario_teste_123"; // Exemplo para testes sem autenticação
+}
+
+/**
+ * Carrega o carrinho do localStorage e, opcionalmente, do Firestore.
+ * @returns {Array} O array do carrinho.
+ */
+async function carregarCarrinho() {
+    // Tenta carregar do localStorage primeiro
+    let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+    // Se houver um usuário, tenta carregar o carrinho do Firestore
+    const userId = getUserId();
+    if (userId !== "usuario_teste_123" && userId) { // Evita carregar para "usuario_teste_123" se for só placeholder
+        try {
+            const docRef = db.collection("carrinhos").doc(userId);
+            const doc = await docRef.get();
+            if (doc.exists && doc.data().itens) {
+                // Mescla ou substitui o carrinho local pelo do Firestore
+                // Depende da sua estratégia de sincronização
+                carrinho = doc.data().itens;
+                localStorage.setItem('carrinho', JSON.stringify(carrinho)); // Atualiza localStorage com o do Firestore
+                console.log("Carrinho carregado do Firestore.");
+            }
+        } catch (error) {
+            console.error("Erro ao carregar carrinho do Firestore:", error);
+        }
+    }
+    return carrinho;
+}
+
+/**
+ * Salva o carrinho no localStorage e no Firestore.
+ * @param {Array} carrinho - O array do carrinho a ser salvo.
+ */
+async function salvarCarrinho(carrinho) {
+    localStorage.setItem('carrinho', JSON.stringify(carrinho));
+    
+    // Salva no Firestore se houver um usuário logado
+    const userId = getUserId();
+    if (userId !== "usuario_teste_123" && userId) { // Evita salvar para "usuario_teste_123" se for só placeholder
+        try {
+            await db.collection("carrinhos").doc(userId).set({
+                itens: carrinho,
+                ultimaAtualizacao: firebase.firestore.FieldValue.serverTimestamp() // Adiciona um timestamp
+            });
+            console.log("Carrinho salvo no Firestore e localStorage!");
+        } catch (error) {
+            console.error("Erro ao salvar carrinho no Firestore:", error);
+        }
+    } else {
+        console.log("Carrinho salvo apenas no localStorage (sem usuário logado ou ID de teste).");
+    }
+}
+
+/**
+ * Adiciona um produto ao carrinho.
+ * @param {number} idProduto - O ID do produto a ser adicionado.
+ */
+async function adicionarAoCarrinho(idProduto) {
+    let carrinho = await carregarCarrinho(); // Carrega o estado atual do carrinho
+
+    const produtoExistente = carrinho.find(p => p.id === idProduto);
+
+    if (produtoExistente) {
+        produtoExistente.quantidade += 1;
+    } else {
+        const produto = produtos.find(p => p.id === idProduto);
+        if (produto) { // Garante que o produto existe na lista
+            carrinho.push({ ...produto, quantidade: 1 });
+        } else {
+            console.warn(`Produto com ID ${idProduto} não encontrado.`);
+            alert("Erro: Produto não disponível.");
+            return;
+        }
+    }
+
+    await salvarCarrinho(carrinho); // Salva o carrinho atualizado
+    alert("Produto adicionado ao carrinho!");
+    // Você pode querer chamar uma função para atualizar a interface do usuário aqui
+}
+
+// --- Exemplo de como usar (opcional, para teste) ---
+// window.onload = async () => {
+//     console.log("Carrinho inicial:", await carregarCarrinho());
+// };

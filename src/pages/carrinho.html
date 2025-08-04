@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrinho - Bravoure</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+</head>
+
+<body>
+  <header class="cabecalho">
+    <img class="logo" src="../../img/bravoure4.png" alt="Logo Bravoure" />
+    <h1>Bravoure</h1>
+    <nav class="navegacao">
+      <ul class="menu">
+        <li><a href="inicio.html" class="menu-link">Início</a> </li>
+        <li><a href="produtos.html" class="menu-link">Produtos</a> </li>
+        <li><a href="carrinho.html" class="menu-link">Carrinho</a> </li>
+        <li><a href="conta.html" class="menu-link">Conta</a> </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container-carrinho">
+    <h2>Meu Carrinho</h2>
+    <div id="carrinho-lista">
+      <!-- Produtos do carrinho serão inseridos aqui via JavaScript -->
+    </div>
+
+    <div class="carrinho-resumo">
+    <p style="color: white;"> <strong>Total:</strong> R$ <span id="carrinho-total">0,00</span>
+    </p>
+    <button class="botao-finalizar">Finalizar Compra</button>
+</div>
+  </main>
+
+  <footer>
+    <p>Contato: (85) 9 9211-9999</p>
+    <p>&copy; 2025 Bravoure. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Script para carregar o carrinho (adicione depois) -->
+  <script src="../carrinho.js"></script>
+
+</body>
+
+</html>
