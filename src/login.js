@@ -13,6 +13,7 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 const formLogin = document.getElementById('loginForm');
 
+// Verifica se o usuário já está logado
 formLogin.addEventListener('submit', (event) => {
   event.preventDefault();
 
